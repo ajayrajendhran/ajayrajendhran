@@ -1,12 +1,11 @@
 name: Notify Slack on Success
-
 on:
   push:
     branches:
       - main
   pull_request:
     types: [opened, closed, merged]
-
+    
 jobs:
   slack_notification:
     runs-on: ubuntu-latest
@@ -14,15 +13,15 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v3
 
+      - name: Build Step
+        run: |
+          echo "Building the project..."
+          # Your build commands go here
+          echo "Build succeeded"
+
       - name: Send success notification to Slack
         if: success()
-        uses: actions/checkout@v3
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_USERNAME: 'GitHub Actions'
-          SLACK_ICON_EMOJI: ':white_check_mark:'
-        with:
-          status: 'success'
-          author_name: '${{ github.actor }}'
-          title: 'Build Succeeded :tada:'
-          message: 'Hey team, the build has succeeded! :sparkles: \nTriggered by: `${{ github.actor }}`'
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{"text":"Hey team, the build has succeeded! :sparkles: \nTriggered by: `'"${GITHUB_ACTOR}"'`"}' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
