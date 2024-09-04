@@ -23,7 +23,7 @@ jobs:
           ${{ runner.os }}-docker-
 
     - name: Build Docker image
-      run: |
+      run: | 
         docker build -t my-flask-app .
 
     - name: Run Docker container
