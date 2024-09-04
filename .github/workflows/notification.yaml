@@ -1,4 +1,4 @@
-name: Notify Slack
+name: Notify Slack on Success
 
 on:
   push:
@@ -11,15 +11,18 @@ jobs:
   slack_notification:
     runs-on: ubuntu-latest
     steps:
-      - name: Send notification to Slack
+      - name: Check out the repository
+        uses: actions/checkout@v3
+
+      - name: Send success notification to Slack
+        if: success()
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_USERNAME: 'GitHub Actions'
-          SLACK_ICON_EMOJI: ':rocket:'
+          SLACK_ICON_EMOJI: ':white_check_mark:'
         with:
-          status: ${{ job.status }}
-          author_name: '${{ secrets.SLACK_ACTOR }}'
-          author_link: 'https://github.com/${{ secrets.SLACK_ACTOR }}'
-          title: 'GitHub Actions Notification'
-          message: 'Job *${{ job.status }}* for `${{ github.repository }}`'
+          status: 'success'
+          author_name: '${{ github.actor }}'
+          title: 'Build Succeeded :tada:'
+          message: 'Hey team, the build has succeeded! :sparkles: \nTriggered by: `${{ github.actor }}`'
