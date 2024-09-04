@@ -1,7 +1,7 @@
 name: Build and Deploy Flask Docker Image
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
 
     - name: Run Docker container
       run: |
-        docker run -d -p 5052:5000 --name my-flask-container my-flask-app
+        docker run -d -p 5062:5000 --name my-flask-container my-flask-app
 
     - name: Notify Slack - Success
       if: success()
