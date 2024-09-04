@@ -1,0 +1,25 @@
+name: Notify Slack
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, closed, merged]
+
+jobs:
+  slack_notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send notification to Slack
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_USERNAME: 'GitHub Actions'
+          SLACK_ICON_EMOJI: ':rocket:'
+        with:
+          status: ${{ job.status }}
+          author_name: '${{ github.actor }}'
+          author_link: 'https://github.com/${{ github.actor }}'
+          title: 'GitHub Actions Notification'
+          message: 'Job *${{ job.status }}* for `${{ github.repository }}`'
