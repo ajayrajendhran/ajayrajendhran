@@ -16,7 +16,7 @@ jobs:
 
       - name: Send success notification to Slack
         if: success()
-        uses: rtCamp/action-slack-notify@v2
+        uses: actions/checkout@v3
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_USERNAME: 'GitHub Actions'
