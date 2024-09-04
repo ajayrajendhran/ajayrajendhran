@@ -19,7 +19,7 @@ jobs:
           SLACK_ICON_EMOJI: ':rocket:'
         with:
           status: ${{ job.status }}
-          author_name: '${{ secrets.github.actor }}'
-          author_link: 'https://github.com/${{ secrets.github.actor }}'
+          author_name: '${{ secrets.SLACK_ACTOR }}'
+          author_link: 'https://github.com/${{ secrets.SLACK_ACTOR }}'
           title: 'GitHub Actions Notification'
           message: 'Job *${{ job.status }}* for `${{ github.repository }}`'
