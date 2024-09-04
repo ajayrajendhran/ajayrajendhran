@@ -1,7 +1,7 @@
-name: Docker Image Build
+name: Build and Test Flask Docker Image
 
 on:
-  workflow_dispatch: # Trigger the workflow manually
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,17 +11,40 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Log in to Docker Hub
-      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-    - name: Pull image from Docker Hub
-      run: docker pull your-dockerhub-username/your-image:your-tag
+    - name: Cache Docker layers
+      uses: actions/cache@v3
+      with:
+        path: /tmp/.buildx-cache
+        key: ${{ runner.os }}-docker-${{ github.sha }}
+        restore-keys: |
+          ${{ runner.os }}-docker-
 
     - name: Build Docker image
-      run: docker build -t your-dockerhub-username/your-image:your-tag .
-    - name: Send success notification to Slack
+      run: |
+        docker build -t my-flask-app .
+
+    - name: Run Docker container
+      run: |
+        docker run -d -p 5000:5000 --name my-flask-container my-flask-app
+
+    - name: Verify Flask app
+      run: |
+        curl --silent http://localhost:5000 | grep "Hello from Flask running in Docker!"
+
+    - name: Clean up
+      run: |
+        docker stop my-flask-container
+        docker rm my-flask-container
+
+    - name: Notify Slack - Success
       if: success()
       run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"Hey team, the build has succeeded! :sparkles: \nTriggered by: `'"${GITHUB_ACTOR}"'`"}' \
-          ${{ secrets.SLACK_WEBHOOK_URL }}
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"Build succeeded for workflow: ${{ github.workflow }} - Run: ${{ github.run_number }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: Notify Slack - Failure
+      if: failure()
+      run: |
+        curl -X POST -H 'Content-type: application/json' --data '{"text":"Build failed for workflow: ${{ github.workflow }} - Run: ${{ github.run_number }}"}' ${{ secrets.SLACK_WEBHOOK_URL }}
