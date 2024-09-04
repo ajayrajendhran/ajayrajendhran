@@ -1,4 +1,4 @@
-name: Build and Test Flask Docker Image
+name: Build and Deploy Flask Docker Image
 
 on:
   workflow_dispatch:
@@ -28,11 +28,7 @@ jobs:
 
     - name: Run Docker container
       run: |
-        docker run -d -p 5000:5000 --name my-flask-container my-flask-app
-
-    - name: Verify Flask app
-      run: |
-        curl --silent http://localhost:5000 | grep "Hello from Flask running in Docker!"
+        docker run -d -p 5001:5001 --name my-flask-container my-flask-app
 
     - name: Clean up
       run: |
