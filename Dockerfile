@@ -1,11 +1,9 @@
-FROM python:3.8-slim
+# Use the official Nginx image as a base
+FROM nginx:latest
 
-WORKDIR /app
+# Copy custom Nginx configuration file (if needed)
+COPY nginx.conf /etc/nginx/nginx.conf
 
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+# Copy website files to the Nginx HTML directory
+COPY html/ /usr/share/nginx/html/
 
-COPY . .
-
-EXPOSE 5000
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
