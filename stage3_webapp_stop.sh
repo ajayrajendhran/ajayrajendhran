@@ -7,5 +7,3 @@ if [[ "" !=  "$CID" ]]; then
   sudo docker stop "$CID"
   sudo docker rm "$CID"
 fi
-
-# kdlkmlkcmsdlkmcklm
