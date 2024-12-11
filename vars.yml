@@ -1,0 +1,17 @@
+user: "ubuntu"
+
+ecr: "{{ lookup('community.general.credstash', 'stage_ecr', region='us-west-2') }}"
+
+webapp:
+  ecr: "{{ lookup('community.general.credstash', 'stage3_webapp', region='us-west-2') }}"
+  tag: "tag_App_integrated"
+  app: "webapp"
+  stop: "stage3_webapp_stop.sh"
+  start: "stage_webapp_start.sh"
+  slave: "tag_app_jenkins_slave"
+  image_name: "stage3-webapp"
+  dir: "/home/linux-slave/workspace/1_stage_webapp_deploy"
+  account: "arn:aws:elasticloadbalancing:us-west-2:780533555440"
+  lb: "dev-lb/5d3a00204e079fd5/28e34b1d619346e1/e5fe452cf5f9bdef"
+  tg1: "Dev-webapp-tg/072a7dff5dff8c38"
+  tg2: "dev-webapp-2/ab16ffba67e26cfd"

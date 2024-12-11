@@ -1,0 +1,16 @@
+
+user: "ubuntu"
+ecr: "{{ lookup('community.general.credstash', 'stage_ecr', region='us-west-2') }}"
+backend:
+  ecr: "{{ lookup('community.general.credstash', 'stage3_backend', region='us-west-2') }}"
+  stop: "stage2_backend_stop.sh"
+  log_group: "{{ lookup('community.general.credstash', 'backend_log_group', region='us-west-2') }}"
+  log_stream: "{{ lookup('community.general.credstash', 'backend_log_stream', region='us-west-2') }}"
+  secret: "{{ lookup('community.general.credstash', 'stage3backend', region='us-west-2') }}"
+  image_name: "stage2-backend"
+
+NRT:
+  ecr: "{{ lookup('community.general.credstash', 'ecr_stage3_batch_nrt', region='us-west-2') }}"
+  image_name: "background_backend"
+  slave: "tag_app_jenkins_stage_slave"
+  file: "Dockerfile-batch"
