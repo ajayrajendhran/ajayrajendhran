@@ -8,3 +8,4 @@ if [[ "" !=  "$CID" ]]; then
   sudo docker rm "$CID"
 fi
 
+# kdlkmlkcmsdlkmcklm
